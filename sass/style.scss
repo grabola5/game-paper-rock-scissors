@@ -1,0 +1,26 @@
+body {
+  padding: 20px;
+  text-align: center; 
+}
+
+button {
+  display: inline-block;
+  padding: 10px 40px;
+  width: 40%;
+  margin-top: 50px;
+  font-size: 22px;
+  text-align: center;
+  cursor: pointer;
+  color: #fff;
+}
+.start {
+  background-color: #1F9968;
+  border-color: #1F9968;
+}
+.choice {
+  background-color: #237061;
+  border-color: #237061;
+}
+.hide {
+  display: none;
+}
