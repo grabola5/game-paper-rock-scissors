@@ -13,11 +13,12 @@ var log = function (text) {
 var logT = function (text) {
   outputTop.innerHTML = '<br>' + text + '<br>'; 
 };
-
-var playerScore = 0;
-var computerScore = 0;
-var roundsAmount = 0;
-var rounds = 0;
+var params = {
+  playerScore: 0,
+  computerScore: 0,
+  roundsAmount:0,
+  rounds: 0
+};
 
 //funkcja chowająca przyciski//
 var hideButtons = function () {
@@ -35,20 +36,20 @@ var showButtons = function () {
 
 //funkcja resetująca wynik//
 var resetResult = function () {
-  playerScore = 0;
-  computerScore = 0;
+  params.playerScore = 0;
+  params.computerScore = 0;
 };
 
 //funkcja rozpoczynająca grę// 
 newGame.addEventListener ('click', function () {
   outputResult.innerHTML = '';
   logT ('');
-  roundsAmount = window.prompt ('How many winning rounds you need to win the game?');
-  if (roundsAmount==='' || isNaN(roundsAmount) || roundsAmount == null || roundsAmount == 0) {
+  params.roundsAmount = window.prompt ('How many winning rounds you need to win the game?');
+  if (params.roundsAmount==='' || isNaN(params.roundsAmount) || params.roundsAmount == null || params.roundsAmount == 0) {
     log ('Incorrect value! Write a number.');
     hideButtons ();
   } else {
-      logT ('You have to win '  + roundsAmount + ' rounds to win the game');
+      logT ('You have to win '  + params.roundsAmount + ' rounds to win the game');
       showButtons();
     }
 });
@@ -73,17 +74,17 @@ var result = function (yourMove, opponentMove) {
                (yourMove == 'rock' && opponentMove == 'scissors') ||
                (yourMove == 'scissors' && opponentMove == 'paper')) {
         log ('You WON: you played ' + yourMove + ', computer played ' + opponentMove);
-        playerScore ++;
+        params.playerScore ++;
       } else {
-          log ('YOU LOST: you played ' + yourMove + ', computer played ' +                opponentMove);
-          computerScore ++;
+          log ('YOU LOST: you played ' + yourMove + ', computer played ' +  opponentMove);
+          params.computerScore ++;
           }
-  rounds ++;
+  params.rounds ++;
 };
 
 //funkcja wyświetlająca wynik//
 var score = function () {
-  outputResult.innerHTML = '<br><br> You --- ' + playerScore + ' : ' + computerScore + ' --- Computer';
+  outputResult.innerHTML = '<br><br> You --- ' + params.playerScore + ' : ' + params.computerScore + ' --- Computer';
 };
 
 var playerMove = function (yourMove){ 
@@ -111,12 +112,12 @@ scissors.addEventListener ('click', function (){
 
 //funkcja kończąca grę//
 var endGame = function () {
-  if (playerScore == roundsAmount) {
+  if (params.playerScore == params.roundsAmount) {
     logT ('Congratulations! You won the entire game!');
     log ('Game over, please press the new game button!');
     hideButtons ();
     resetResult ();
-  } else if (computerScore == roundsAmount) {
+  } else if (params.computerScore == params.roundsAmount) {
       logT ('Ups..You failed.');
       log ('Game over, please press the new game button!');
       hideButtons ();
