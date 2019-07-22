@@ -6,6 +6,7 @@ var newGame = document.getElementById ('newGame');
 var paper = document.getElementById ('buttonPaper');
 var rock = document.getElementById ('buttonRock');
 var scissors = document.getElementById ('buttonScissors');
+var buttons = document.querySelectorAll('.player-move');
 var log = function (text) {
   output.innerHTML = '<br>' + text + '<br><br>';
 };
@@ -91,7 +92,13 @@ var playerMove = function (yourMove){
   endGame ();
   };
 
-paper.addEventListener ('click', function (){
+for (var i = 0; i < buttons.length; i++) {
+  buttons[i].addEventListener ('click', function () {
+    playerMove (this.getAttribute('data-move'))
+  })
+};
+
+/*paper.addEventListener ('click', function (){
   playerMove ('paper');
 });
 rock.addEventListener ('click', function (){
@@ -100,6 +107,7 @@ rock.addEventListener ('click', function (){
 scissors.addEventListener ('click', function (){
   playerMove ('scissors');
 });
+*/
 
 //funkcja kończąca grę//
 var endGame = function () {
