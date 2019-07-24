@@ -1,4 +1,6 @@
 'use strict';
+(function(){
+
 var output = document.getElementById('output');
 var outputTop = document.getElementById('info');
 var outputResult = document.getElementById('result');
@@ -43,13 +45,12 @@ var resetResult = function () {
 //funkcja rozpoczynająca grę// 
 newGame.addEventListener ('click', function () {
   outputResult.innerHTML = '';
-  logT ('');
   params.roundsAmount = window.prompt ('How many winning rounds you need to win the game?');
   if (params.roundsAmount==='' || isNaN(params.roundsAmount) || params.roundsAmount == null || params.roundsAmount == 0) {
     log ('Incorrect value! Write a number.');
     hideButtons ();
   } else {
-      logT ('You have to win '  + params.roundsAmount + ' rounds to win the game');
+      log('You have to win '  + params.roundsAmount + ' rounds to win the game');
       showButtons();
     }
 });
@@ -116,12 +117,53 @@ var endGame = function () {
     logT ('Congratulations! You won the entire game!');
     log ('Game over, please press the new game button!');
     hideButtons ();
+    showModal ('#modal-one');
     resetResult ();
   } else if (params.computerScore == params.roundsAmount) {
       logT ('Ups..You failed.');
       log ('Game over, please press the new game button!');
       hideButtons ();
+      showModal ('#modal-one');
       resetResult ();
       }
 };
 
+//MODAL//
+
+var modals = document.querySelectorAll ('.modal');
+  var modalOverlay = document.querySelector ('#modal-overlay');
+  var closeButtons = document.querySelectorAll('.modal .close');
+  var modalLinks = document.querySelectorAll('.show-modal');
+  
+  //funckja otwierająca modal//
+  var showModal = function (modalId) {
+    modalOverlay.classList.add('show');
+    for (var i = 0; i<modals.length; i++) {
+      modals[i].classList.remove('show');
+    };
+    document.querySelector(modalId).classList.add('show');
+  }
+  var buttonClickHandler = function(event){
+    event.preventDefault();
+    var modalId = this.getAttribute('href');
+    showModal (modalId);
+  };
+  
+  for(var i = 0; i < modalLinks.length; i++){
+    modalLinks[i].addEventListener('click', buttonClickHandler);
+  };
+  var hideModal = function(event){
+    event.preventDefault();
+    modalOverlay.classList.remove('show');
+  };
+  for(var i = 0; i < closeButtons.length; i++){
+    closeButtons[i].addEventListener('click', hideModal);
+  }
+  modalOverlay.addEventListener('click', hideModal);
+  
+  for(var i = 0; i < modals.length; i++){
+    modals[i].addEventListener('click', function(event){
+      event.stopPropagation();
+    });
+  }
+})(); 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+	<title>Game</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<div id="info">
-		</div>
-		<div id="result">
+		<div>
+			<p><a href="#modal-one" class="show-modal"></a></p>
 		</div>
 		<div>
 		  <button class="start" id="newGame">Start new game</button>
@@ -22,6 +22,20 @@
 		</div>
 		<div id="output">
 		</div>
+
+		<div class="overlay" id="modal-overlay">
+			<div class="modal" id="modal-one">
+				<a href="#" class="close">x</a>
+				<header>Final result</header>
+				<div class="content">
+					<div id="info">
+					</div>
+					<div id="result">
+					</div>
+				</div>
+			</div>
+		</div>
+
 	<script src="js/script.js"></script>
 	</body>
 </html>

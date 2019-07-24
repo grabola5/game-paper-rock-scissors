@@ -1,6 +1,6 @@
 body {
   padding: 20px;
-  text-align: center; 
+  text-align: center;
 }
 
 button {
@@ -17,10 +17,62 @@ button {
   background-color: #1F9968;
   border-color: #1F9968;
 }
-.choice {
-  background-color: #237061;
+.player-move {
+  background-color: #237062;
   border-color: #237061;
 }
 .hide {
   display: none;
+}
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  
+  &.show {
+    display: block;
+  }
+}
+
+.modal {
+  display: none;
+  background: #1F9968;
+  border: 1px solid white;
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+
+  &.show {
+    display: block;
+  }
+  
+  .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px;
+    color: #fff;
+    text-decoration: none;
+  }
+  header {
+    font-size: 26px;
+    line-height: 40px;
+    min-height: 40px;
+    font-weight: bold;
+    padding: 20px 40px;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .content {
+    font-size: 24px;
+    min-height: 40px;
+    padding: 5px 20px;
+    color: #fff;
+  }
 }
