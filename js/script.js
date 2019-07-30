@@ -19,7 +19,8 @@ var params = {
   playerScore: 0,
   computerScore: 0,
   roundsAmount:0,
-  rounds: 0
+  rounds: 0,
+  progress: []
 };
 
 //funkcja chowająca przyciski//
@@ -76,40 +77,68 @@ var result = function (yourMove, opponentMove) {
                (yourMove == 'scissors' && opponentMove == 'paper')) {
         log ('You WON: you played ' + yourMove + ', computer played ' + opponentMove);
         params.playerScore ++;
+        params.progress.push ({
+          playerMove: yourMove,
+          opponentMove: opponentMove,
+          result: '1-0',
+          winner: 'you'
+        })
       } else {
           log ('YOU LOST: you played ' + yourMove + ', computer played ' +  opponentMove);
           params.computerScore ++;
+          params.progress.push ({
+          playerMove: yourMove,
+          opponentMove: opponentMove,
+          result: '0-1',
+          winner: 'computer'
+        })
           }
   params.rounds ++;
 };
 
 //funkcja wyświetlająca wynik//
 var score = function () {
-  outputResult.innerHTML = '<br><br> You --- ' + params.playerScore + ' : ' + params.computerScore + ' --- Computer';
+//  outputResult.innerHTML = '<br><br> You --- ' + params.playerScore + ' : ' + params.computerScore + ' --- Computer';
 };
+
+var createModal = function () {
+  var modal = document.getElementById('modal-one');
+  var result = document.getElementById('result');
+  result.innerHTML = '';
+  var table = document.createElement('table');
+  var thead = document.createElement ('thead');
+  thead.innerHTML = '<th>Round number</th>' +
+                      '<th>Your move</th>' +
+                      '<th>Computer move</th>' +
+                      '<th>Result</th>' +
+                      '<th>Winner</th>';
+    table.appendChild(thead);
+  for (i=0; i<params.progress.length; i++) {
+    var tr = document.createElement('tr');
+    var round = params.progress[i];
+    tr.innerHTML = '<td>' + (i+1) +'</td>' + 
+                   '<td>' + round.playerMove +'</td>' +
+                   '<td>' + round.opponentMove +'</td>'  +
+                   '<td>' + round.result +'</td>' +
+                   '<td>' + round.winner +'</td>';
+    table.appendChild(tr)
+  }
+  result.appendChild(table)
+}; 
 
 var playerMove = function (yourMove){ 
   result (yourMove);
   score ();
   endGame ();
-  };
+  createModal ();
+};
 
 for (var i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener ('click', function () {
     playerMove (this.getAttribute('data-move'))
   })
 };
-
-/*paper.addEventListener ('click', function (){
-  playerMove ('paper');
-});
-rock.addEventListener ('click', function (){
-  playerMove ('rock');
-});
-scissors.addEventListener ('click', function (){
-  playerMove ('scissors');
-});
-*/
+  
 
 //funkcja kończąca grę//
 var endGame = function () {
