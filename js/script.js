@@ -3,16 +3,16 @@
 
 var output = document.getElementById('output');
 var outputTop = document.getElementById('info');
-var outputResult = document.getElementById('result');
+var result = document.getElementById('result');
 var newGame = document.getElementById ('newGame');
 var paper = document.getElementById ('buttonPaper');
 var rock = document.getElementById ('buttonRock');
 var scissors = document.getElementById ('buttonScissors');
 var buttons = document.querySelectorAll('.player-move');
-var log = function (text) {
+var showInfo = function (text) {
   output.innerHTML = '<br>' + text + '<br><br>';
 };
-var logT = function (text) {
+var showFinalResult = function (text) {
   outputTop.innerHTML = '<br>' + text + '<br>'; 
 };
 var params = {
@@ -37,6 +37,12 @@ var showButtons = function () {
   scissors.classList.remove('hide');
 };
 
+for (var i = 0; i < buttons.length; i++) {
+  buttons[i].addEventListener ('click', function () {
+    playerMove (this.getAttribute('data-move'))
+  })
+};
+
 //funkcja resetująca wynik//
 var resetResult = function () {
   params.playerScore = 0;
@@ -45,18 +51,25 @@ var resetResult = function () {
 
 //funkcja rozpoczynająca grę// 
 newGame.addEventListener ('click', function () {
-  outputResult.innerHTML = '';
+  result.innerHTML = '';
+  params.progress= [];
   params.roundsAmount = window.prompt ('How many winning rounds you need to win the game?');
   if (params.roundsAmount==='' || isNaN(params.roundsAmount) || params.roundsAmount == null || params.roundsAmount == 0) {
-    log ('Incorrect value! Write a number.');
-    hideButtons ();
+    showInfo ('Incorrect value! Write a number.');
+    hideButtons();
   } else {
-      log('You have to win '  + params.roundsAmount + ' rounds to win the game');
+      showInfo('You have to win '  + params.roundsAmount + ' rounds to win the game');
       showButtons();
     }
 });
 
-//funkcja losująca //
+var playerMove = function (yourMove){ 
+  compareMoves (yourMove);
+  createModal ();
+  endGame ();
+};
+
+//funkcja losująca//
 var computerMove = function (){
   var randomNumber = Math.floor(Math.random()*3+1);
   if (randomNumber == 1) {
@@ -68,14 +81,14 @@ var computerMove = function (){
 };
 
 //funkcja porównująca wyniki i wyświetlająca komunikat o wygranej//
-var result = function (yourMove, opponentMove) {
+var compareMoves = function (yourMove, opponentMove) {
   var opponentMove = computerMove ();
   if (yourMove == opponentMove) {
-    log ('DRAW: you played ' + yourMove + ', computer played ' + opponentMove);
+    showInfo('DRAW: you played ' + yourMove + ', computer played ' + opponentMove);
     } else if ((yourMove == 'paper' && opponentMove == 'rock') || 
                (yourMove == 'rock' && opponentMove == 'scissors') ||
                (yourMove == 'scissors' && opponentMove == 'paper')) {
-        log ('You WON: you played ' + yourMove + ', computer played ' + opponentMove);
+        showInfo('You WON: you played ' + yourMove + ', computer played ' + opponentMove);
         params.playerScore ++;
         params.progress.push ({
           playerMove: yourMove,
@@ -84,34 +97,28 @@ var result = function (yourMove, opponentMove) {
           winner: 'you'
         })
       } else {
-          log ('YOU LOST: you played ' + yourMove + ', computer played ' +  opponentMove);
+          showInfo('YOU LOST: you played ' + yourMove + ', computer played ' +  opponentMove);
           params.computerScore ++;
           params.progress.push ({
-          playerMove: yourMove,
-          opponentMove: opponentMove,
-          result: '0-1',
-          winner: 'computer'
-        })
-          }
+            playerMove: yourMove,
+            opponentMove: opponentMove,
+            result: '0-1',
+            winner: 'computer'
+          })
+        }
   params.rounds ++;
-};
-
-//funkcja wyświetlająca wynik//
-var score = function () {
-//  outputResult.innerHTML = '<br><br> You --- ' + params.playerScore + ' : ' + params.computerScore + ' --- Computer';
 };
 
 var createModal = function () {
   var modal = document.getElementById('modal-one');
-  var result = document.getElementById('result');
   result.innerHTML = '';
   var table = document.createElement('table');
   var thead = document.createElement ('thead');
   thead.innerHTML = '<th>Round number</th>' +
-                      '<th>Your move</th>' +
-                      '<th>Computer move</th>' +
-                      '<th>Result</th>' +
-                      '<th>Winner</th>';
+                    '<th>Your move</th>' +
+                    '<th>Computer move</th>' +
+                    '<th>Result</th>' +
+                    '<th>Winner</th>';
     table.appendChild(thead);
   for (i=0; i<params.progress.length; i++) {
     var tr = document.createElement('tr');
@@ -125,32 +132,18 @@ var createModal = function () {
   }
   result.appendChild(table)
 }; 
-
-var playerMove = function (yourMove){ 
-  result (yourMove);
-  score ();
-  endGame ();
-  createModal ();
-};
-
-for (var i = 0; i < buttons.length; i++) {
-  buttons[i].addEventListener ('click', function () {
-    playerMove (this.getAttribute('data-move'))
-  })
-};
   
-
 //funkcja kończąca grę//
 var endGame = function () {
   if (params.playerScore == params.roundsAmount) {
-    logT ('Congratulations! You won the entire game!');
-    log ('Game over, please press the new game button!');
+    showFinalResult ('Congratulations! You won the entire game! <br><br> You --- ' + params.playerScore + ' : ' + params.computerScore + ' --- Computer<br>');
+    showInfo ('Game over, please press the new game button!');
     hideButtons ();
     showModal ('#modal-one');
     resetResult ();
   } else if (params.computerScore == params.roundsAmount) {
-      logT ('Ups..You failed.');
-      log ('Game over, please press the new game button!');
+      showFinalResult ('Ups..You failed. <br><br> You --- ' + params.playerScore + ' : ' + params.computerScore + ' --- Computer<br>');
+      showInfo ('Game over, please press the new game button!');
       hideButtons ();
       showModal ('#modal-one');
       resetResult ();
@@ -160,11 +153,11 @@ var endGame = function () {
 //MODAL//
 
 var modals = document.querySelectorAll ('.modal');
-  var modalOverlay = document.querySelector ('#modal-overlay');
-  var closeButtons = document.querySelectorAll('.modal .close');
-  var modalLinks = document.querySelectorAll('.show-modal');
+var modalOverlay = document.querySelector ('#modal-overlay');
+var closeButtons = document.querySelectorAll('.modal .close');
+var modalLinks = document.querySelectorAll('.show-modal');
   
-  //funckja otwierająca modal//
+  //funkcja otwierająca modal//
   var showModal = function (modalId) {
     modalOverlay.classList.add('show');
     for (var i = 0; i<modals.length; i++) {
